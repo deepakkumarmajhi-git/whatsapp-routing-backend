@@ -63,7 +63,7 @@ async def receive_webhook(request: Request):
                             {"$set": {
                                 "customer_phone": sender,
                                 "wa_id": wa_id,
-                                "customer_name": customer_name,
+                                "name": name,
                                 "status": "pending",
                                 "last_message": body,
                                 "updated_at": datetime.utcnow()
