@@ -10,10 +10,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS so your Next.js team can hit endpoints locally without blockages
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Restrict this to your Next.js domain in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

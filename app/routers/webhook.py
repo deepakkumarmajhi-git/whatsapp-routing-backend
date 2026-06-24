@@ -23,35 +23,46 @@ async def receive_webhook(request: Request):
     tasks_collection = get_collection("tasks")
     
     try:
-        # We use raw request.json() to prevent 422 validation crashes on messy Meta payloads
         payload = await request.json()
         entries = payload.get("entry", [])
-        
+
         for entry in entries:
             for change in entry.get("changes", []):
                 field = change.get("field")
                 value = change.get("value", {})
-                
-                # --- PROCESS MESSAGES ---
+                contacts = value.get("contacts", [])
+
+                contact_map = {}
+                for contact in contacts:
+                    wa_id = contact.get("wa_id")
+                    name = contact.get("profile", {}).get("name", "Unknown")
+                    if wa_id:
+                        contact_map[wa_id] = name
+                    
                 if field == "messages":
                     for msg in value.get("messages", []):
                         sender = msg.get("from")
                         msg_id = msg.get("id")
                         body = msg.get("text", {}).get("body", "[Non-text payload]")
+                        customer_name = contact_map.get(sender, "Unknown Contact")
                         
                         # 1. Save the raw chat log to MongoDB
                         await messages_collection.insert_one({
                             "message_id": msg_id,
                             "sender_phone": sender,
+                            "wa_id" : sender,
+                            "customer_name": customer_name,
                             "text": body,
                             "timestamp": datetime.utcnow()
                         })
                         
-                        # 2. Update or Create an active Dashboard Task for Next.js
+                        # 2. Update or Create an active Dashboard Task
                         await tasks_collection.update_one(
                             {"customer_phone": sender, "status": {"$ne": "completed"}},
                             {"$set": {
                                 "customer_phone": sender,
+                                "wa_id": sender,
+                                "customer_name": customer_name,
                                 "status": "pending",
                                 "last_message": body,
                                 "updated_at": datetime.utcnow()

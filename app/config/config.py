@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     META_API_VERSION: str = "v23.0"
     
     # Database Configuration
-    MONGO_URI: str = "mongodb://localhost:27017"
-    MONGO_DB_NAME: str = "whatsapp_routing_db"
+    MONGO_URI: str
+    MONGO_DB_NAME: str
 
     # Read from .env file directly
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
