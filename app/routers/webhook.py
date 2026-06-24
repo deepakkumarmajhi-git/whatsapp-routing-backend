@@ -50,7 +50,7 @@ async def receive_webhook(request: Request):
                         await messages_collection.insert_one({
                             "message_id": msg_id,
                             "sender_phone": sender,
-                            "wa_id" : sender,
+                            "wa_id" : wa_id,
                             "customer_name": customer_name,
                             "text": body,
                             "timestamp": datetime.utcnow()
@@ -61,7 +61,7 @@ async def receive_webhook(request: Request):
                             {"customer_phone": sender, "status": {"$ne": "completed"}},
                             {"$set": {
                                 "customer_phone": sender,
-                                "wa_id": sender,
+                                "wa_id": wa_id,
                                 "customer_name": customer_name,
                                 "status": "pending",
                                 "last_message": body,
