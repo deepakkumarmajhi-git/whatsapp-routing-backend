@@ -22,6 +22,7 @@ class TaskResponse(BaseModel):
     """How a task object looks when the frontend fetches it for the dashboard."""
     id: str = Field(..., alias="_id")
     customer_phone: str
+    name: str
     status: str  # "pending", "assigned", "completed"
     last_message: str
     priority: str = "normal"  # Highlights "high" priority items like Missed Calls
