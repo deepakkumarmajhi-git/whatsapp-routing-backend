@@ -25,8 +25,7 @@ async def receive_webhook(request: Request):
     
     try:
         payload = await request.json()
-        
-        # Create a unified list to hold the changes we need to process
+        print(f"📩 Received Webhook Payload: {payload}")
         changes_to_process = []
 
         # ==============================================================
