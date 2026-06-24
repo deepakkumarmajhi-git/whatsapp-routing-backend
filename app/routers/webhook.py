@@ -38,21 +38,20 @@ async def receive_webhook(request: Request):
                     name = contact.get("profile", {}).get("name", "Unknown")
                     if wa_id:
                         contact_map[wa_id] = name
-                    
+                    wa_id = contact.get("wa_id")  # Ensure wa_id is defined for later use
+                    name = contact.get("profile", {}).get("name", "Unknown")
                 if field == "messages":
                     for msg in value.get("messages", []):
                         msg_id = msg.get("id")
                         sender = msg.get("from")
                         body = msg.get("text", {}).get("body", "[Non-text payload]")
-                        wa_id = contact_map.get(sender)
-                        customer_name = contact_map.get(sender, "Unknown Contact")
                         
                         # 1. Save the raw chat log to MongoDB
                         await messages_collection.insert_one({
                             "message_id": msg_id,
                             "sender_phone": sender,
                             "wa_id" : wa_id,
-                            "customer_name": customer_name,
+                            "customer_name": name,
                             "text": body,
                             "timestamp": datetime.utcnow()
                         })
