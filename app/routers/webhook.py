@@ -40,6 +40,7 @@ async def receive_webhook(request: Request):
                         contact_map[wa_id] = name
                     wa_id = contact.get("wa_id")  # Ensure wa_id is defined for later use
                     name = contact.get("profile", {}).get("name", "Unknown")
+                    
                 if field == "messages":
                     for msg in value.get("messages", []):
                         msg_id = msg.get("id")
@@ -51,7 +52,7 @@ async def receive_webhook(request: Request):
                             "message_id": msg_id,
                             "sender_phone": sender,
                             "wa_id" : wa_id,
-                            "customer_name": name,
+                            "name": name,
                             "text": body,
                             "timestamp": datetime.utcnow()
                         })
