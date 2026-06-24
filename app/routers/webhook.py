@@ -41,9 +41,10 @@ async def receive_webhook(request: Request):
                     
                 if field == "messages":
                     for msg in value.get("messages", []):
-                        sender = msg.get("from")
                         msg_id = msg.get("id")
+                        sender = msg.get("from")
                         body = msg.get("text", {}).get("body", "[Non-text payload]")
+                        wa_id = contact_map.get(sender)
                         customer_name = contact_map.get(sender, "Unknown Contact")
                         
                         # 1. Save the raw chat log to MongoDB
