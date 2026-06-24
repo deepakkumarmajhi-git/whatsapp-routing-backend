@@ -21,7 +21,7 @@ async def receive_webhook(request: Request):
     """Receives WhatsApp webhooks and isolates messages and calls securely into MongoDB."""
     messages_collection = get_collection("messages")
     tasks_collection = get_collection("tasks")
-    calls_collection = get_collection("calls")  # Target collection for all voice/video events
+    calls_collection = get_collection("calls") 
     
     try:
         payload = await request.json()
